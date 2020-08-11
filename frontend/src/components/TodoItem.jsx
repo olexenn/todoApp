@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
   btn: {
     height: '100%',
-    marginTop: theme.spacing(0.8),
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -39,17 +39,22 @@ export default function TodoItem({ todo, removeTodo, checkTodo }) {
           className={classes.item}
         >
           {todo.completed ? (
-            <ListItemText className={classes.completedItem}>
-              {todo.text}
-            </ListItemText>
+            <ListItemText
+              className={classes.completedItem}
+              primary={todo.text}
+              secondary={todo.date}
+            ></ListItemText>
           ) : (
-            <ListItemText>{todo.text}</ListItemText>
+            <ListItemText
+              primary={todo.text}
+              secondary={todo.date}
+            ></ListItemText>
           )}
         </ListItem>
         {todo.completed ? (
           <Button
             color='secondary'
-            size='medium'
+            size='large'
             className={classes.btn}
             onClick={() => removeTodo(todo._id)}
           >
