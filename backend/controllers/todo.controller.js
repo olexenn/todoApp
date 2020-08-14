@@ -3,6 +3,7 @@ const Todo = require('../models/todo.model');
 exports.addTodo = (req, res) => {
   const newTodo = new Todo({
     text: req.body.text,
+    date: req.body.date,
   });
 
   newTodo

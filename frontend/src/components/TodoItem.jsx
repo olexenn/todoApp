@@ -1,4 +1,7 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { useApi } from '../hooks/apiHook';
+import { deleteTodo, completeTodo } from '../redux/actions/listActions';
 import {
   Button,
   Paper,
@@ -28,15 +31,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TodoItem({ todo, removeTodo, checkTodo }) {
+export default function TodoItem({ todo }) {
+  const API = 'http://localhost:3001/api/v1/';
+
   const classes = useStyles();
+
+  const dispatch = useDispatch();
+  const { request } = useApi();
+
   return (
     <React.Fragment>
       <Paper elevation={5} className={classes.paper}>
         <ListItem
           button
-          onClick={() => checkTodo(todo._id)}
           className={classes.item}
+          onClick={() => {
+            request(API, 'PUT', { _id: todo._id });
+            dispatch(completeTodo(todo._id));
+          }}
         >
           {todo.completed ? (
             <ListItemText
@@ -53,10 +65,13 @@ export default function TodoItem({ todo, removeTodo, checkTodo }) {
         </ListItem>
         {todo.completed ? (
           <Button
+            onClick={() => {
+              request(API, 'DELETE', { _id: todo._id });
+              dispatch(deleteTodo(todo._id));
+            }}
             color='secondary'
             size='large'
             className={classes.btn}
-            onClick={() => removeTodo(todo._id)}
           >
             <DeleteIcon />
           </Button>

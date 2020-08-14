@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { TextField, Paper, makeStyles } from '@material-ui/core';
+import { addTodo } from '../redux/actions/listActions';
+import { toggleAlert } from '../redux/actions/alertActions';
+import { useApi } from '../hooks/apiHook';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -15,24 +19,52 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddTodo({ addTodo, handleChange, input, inError }) {
+export default function AddTodo() {
+  const API = 'http://localhost:3001/api/v1/';
+
   const classes = useStyles();
 
-  const isError = () => {
-    if (inError !== '') return true;
+  const isAlert = useSelector((state) => state.alert);
+
+  const [input, setInput] = useState('');
+  const [error, setError] = useState(false);
+
+  const dispatch = useDispatch();
+  const { request } = useApi();
+
+  const handleInput = ({ target }) => setInput(target.value);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (input === '') {
+      setError(true);
+      return;
+    }
+    // const date = new Date
+    const newTodo = {
+      text: input.trim(),
+      date: new Date().toISOString(),
+    };
+    request(API, 'POST', newTodo);
+    dispatch(addTodo(newTodo));
+
+    if (!isAlert) dispatch(toggleAlert());
+
+    setError(false);
+    setInput('');
   };
 
   return (
-    <form onSubmit={(e) => addTodo(e)} className={classes.form}>
+    <form onSubmit={handleSubmit} className={classes.form}>
       <Paper elevation={3}>
-        {isError() ? (
+        {error ? (
           <TextField
             fullWidth
             variant='outlined'
             size='small'
             error
             helperText='Input field cannot be blank'
-            onChange={() => handleChange()}
+            onChange={handleInput}
             name='input'
             value={input}
             className={classes.input}
@@ -43,13 +75,14 @@ export default function AddTodo({ addTodo, handleChange, input, inError }) {
             fullWidth
             variant='outlined'
             size='small'
-            onChange={(e) => handleChange(e)}
+            onChange={handleInput}
             name='input'
             value={input}
             className={classes.input}
             placeholder='Enter Your Todo Here'
           />
         )}
+        <p>{input}</p>
       </Paper>
     </form>
   );
