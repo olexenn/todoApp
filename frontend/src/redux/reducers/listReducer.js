@@ -18,11 +18,11 @@ export const listReducer = handleActions(
     },
     [completeTodo](state, { payload }) {
       return state.map((todo) =>
-        todo._id === payload ? { ...todo, completed: !todo.completed } : todo
+        todo.text === payload ? { ...todo, completed: !todo.completed } : todo
       );
     },
     [deleteTodo](state, { payload }) {
-      return state.filter((todo) => todo._id !== payload);
+      return state.filter((todo) => todo.text !== payload);
     },
   },
   initialState

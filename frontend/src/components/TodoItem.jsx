@@ -47,9 +47,9 @@ export default function TodoItem({ todo }) {
           className={classes.item}
           onClick={() => {
             request(API + localStorage.getItem('user'), 'PUT', {
-              _id: todo._id,
+              text: todo.text,
             });
-            dispatch(completeTodo(todo._id));
+            dispatch(completeTodo(todo.text));
           }}
         >
           {todo.completed ? (
@@ -69,9 +69,9 @@ export default function TodoItem({ todo }) {
           <Button
             onClick={() => {
               request(API + localStorage.getItem('user'), 'DELETE', {
-                _id: todo._id,
+                text: todo.text,
               });
-              dispatch(deleteTodo(todo._id));
+              dispatch(deleteTodo(todo.text));
             }}
             color='secondary'
             size='large'

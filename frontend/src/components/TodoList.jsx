@@ -51,6 +51,7 @@ function TodoList() {
         }
       >
         {list.map((todo) => {
+          console.log(todo);
           return <TodoItem key={todo._id} todo={todo} />;
         })}
       </List>
