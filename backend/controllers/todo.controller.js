@@ -18,6 +18,11 @@ exports.addTodo = async (req, res) => {
     return;
   }
   const user = await checkUserById(req.query.login);
+  const todo = await Todo.findOne(req.body.date);
+  if (todo) {
+    res.json({ msg: 'Fuck you Gronify' });
+    return;
+  }
   const newTodo = new Todo({
     text: req.body.text,
     date: req.body.date,
