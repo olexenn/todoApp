@@ -1,9 +1,27 @@
 const Todo = require('../models/todo.model');
+const User = require('../models/auth.model');
 
-exports.addTodo = (req, res) => {
+async function checkUserById(login) {
+  if (!login) {
+    return { msg: 'no login', status: 400 };
+  }
+
+  const candidate = await User.findOne({ login: login });
+
+  if (!candidate) return { msg: 'no user', status: 404 };
+  return { status: 200, candidate };
+}
+
+exports.addTodo = async (req, res) => {
+  if (!req.session) {
+    res.status(403).json({ msg: 'Not Auth' });
+    return;
+  }
+  const user = await checkUserById(req.query.login);
   const newTodo = new Todo({
     text: req.body.text,
     date: req.body.date,
+    user: user.candidate._id,
   });
 
   newTodo
@@ -15,14 +33,27 @@ exports.addTodo = (req, res) => {
 };
 
 exports.getTodo = async (req, res) => {
-  const todos = await Todo.find();
+  if (!req.session) {
+    res.status(403).json({ msg: 'Not Auth' });
+    return;
+  }
+  const user = await checkUserById(req.query.login);
+  const todos = await Todo.find({ user: user.candidate._id });
   res.json({ todos: todos });
 };
 
 exports.completeTodo = async (req, res) => {
-  const todo = await Todo.findOne({ _id: req.body._id }, (err) => {
-    if (err) console.error('Error: ', err);
-  });
+  if (!req.session) {
+    res.status(403).json({ msg: 'Not Auth' });
+    return;
+  }
+  const user = await checkUserById(req.query.login);
+  const todo = await Todo.findOne(
+    { _id: req.body._id, user: user.candidate._id },
+    (err) => {
+      if (err) console.error('Error: ', err);
+    }
+  );
 
   todo.completed
     ? await Todo.updateOne(
@@ -45,8 +76,13 @@ exports.completeTodo = async (req, res) => {
   res.json({ msg: 'Todo was completed' });
 };
 
-exports.removeTodo = (req, res) => {
-  Todo.findOneAndDelete({ _id: req.body._id })
+exports.removeTodo = async (req, res) => {
+  if (!req.session) {
+    res.status(403).json({ msg: 'Not Auth' });
+    return;
+  }
+  const user = await checkUserById(req.query.login);
+  Todo.findOneAndDelete({ _id: req.body._id, user: user.candidate._id })
     .then(res.json({ msg: 'Todo has been removed' }))
     .catch((err) => console.log('Error: ', err));
 };

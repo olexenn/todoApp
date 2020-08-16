@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AddTodo() {
-  const API = 'http://localhost:3001/api/v1/';
+  const API = 'http://localhost:3001/api/v1/?login=';
 
   const classes = useStyles();
 
@@ -40,12 +40,12 @@ export default function AddTodo() {
       setError(true);
       return;
     }
-    // const date = new Date
+
     const newTodo = {
       text: input.trim(),
       date: new Date().toISOString(),
     };
-    request(API, 'POST', newTodo);
+    request(API + localStorage.getItem('user'), 'POST', newTodo);
     dispatch(addTodo(newTodo));
 
     if (!isAlert) dispatch(toggleAlert());
@@ -82,7 +82,6 @@ export default function AddTodo() {
             placeholder='Enter Your Todo Here'
           />
         )}
-        <p>{input}</p>
       </Paper>
     </form>
   );

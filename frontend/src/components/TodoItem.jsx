@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TodoItem({ todo }) {
-  const API = 'http://localhost:3001/api/v1/';
+  const API = 'http://localhost:3001/api/v1/?login=';
 
   const classes = useStyles();
 
@@ -46,7 +46,9 @@ export default function TodoItem({ todo }) {
           button
           className={classes.item}
           onClick={() => {
-            request(API, 'PUT', { _id: todo._id });
+            request(API + localStorage.getItem('user'), 'PUT', {
+              _id: todo._id,
+            });
             dispatch(completeTodo(todo._id));
           }}
         >
@@ -66,7 +68,9 @@ export default function TodoItem({ todo }) {
         {todo.completed ? (
           <Button
             onClick={() => {
-              request(API, 'DELETE', { _id: todo._id });
+              request(API + localStorage.getItem('user'), 'DELETE', {
+                _id: todo._id,
+              });
               dispatch(deleteTodo(todo._id));
             }}
             color='secondary'
