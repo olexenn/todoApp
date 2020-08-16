@@ -1,24 +1,11 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Button, TextField, makeStyles } from '@material-ui/core';
 import { useApi } from '../hooks/apiHook';
 import { useDispatch } from 'react-redux';
 import { userLogin } from '../redux/actions/userActions';
 
-const useStyles = makeStyles((theme) => ({
-  form: {
-    margin: theme.spacing(2, 0),
-    maxWidth: '100%',
-    alignItems: 'center',
-  },
-  input: {
-    marginBottom: theme.spacing(3),
-  },
-}));
-
 export default function Auth(e) {
   const API = 'http://localhost:3001/api/v1/login';
-  const classes = useStyles();
 
   const dispatch = useDispatch();
 
@@ -61,67 +48,60 @@ export default function Auth(e) {
 
   return (
     <React.Fragment>
-      <form onSubmit={handleSubmit} className={classes.form}>
+      <form onSubmit={handleSubmit}>
         {error.length > 0 ? (
-          <div>
-            <TextField
-              className={classes.input}
-              fullWidth
-              error
-              helplerText={error}
+          <div className='group'>
+            <input
               onChange={({ target }) => {
                 setLogin(target.value);
               }}
-              variant='outlined'
               label='Login'
               name='login'
               type='text'
-              autoFocus
             />
-            <TextField
-              className={classes.input}
-              fullWidth
-              error
-              helperText={error}
+            <span className='bar'></span>
+
+            <input
               onChange={({ target }) => {
                 setPassword(target.value);
               }}
-              variant='outlined'
               label='Password'
               name='password'
               type='password'
             />
+            <span className='bar'></span>
           </div>
         ) : (
-          <div>
-            <TextField
-              className={classes.input}
-              fullWidth
-              onChange={({ target }) => {
-                setLogin(target.value);
-              }}
-              variant='outlined'
-              label='Login'
-              name='login'
-              type='text'
-              autoFocus
-            />
-            <TextField
-              className={classes.input}
-              fullWidth
-              onChange={({ target }) => {
-                setPassword(target.value);
-              }}
-              variant='outlined'
-              label='Password'
-              name='password'
-              type='password'
-            />
-          </div>
+          <>
+            <div className='group'>
+              <input
+                onChange={({ target }) => {
+                  setLogin(target.value);
+                }}
+                name='login'
+                type='text'
+                required
+              />
+              <span className='bar'></span>
+              <label>Login</label>
+            </div>
+            <div className='group'>
+              <input
+                onChange={({ target }) => {
+                  setPassword(target.value);
+                }}
+                name='password'
+                type='password'
+                required
+              />
+              <span className='bar'></span>
+              <label>Password</label>
+            </div>
+          </>
         )}
-        <Button variant='contained' type='submit'>
+        <button type='submit' className='btn'>
           Auth
-        </Button>
+        </button>
       </form>
     </React.Fragment>
   );
