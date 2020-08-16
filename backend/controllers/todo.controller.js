@@ -49,7 +49,7 @@ exports.completeTodo = async (req, res) => {
   }
   const user = await checkUserById(req.query.login);
   const todo = await Todo.findOne(
-    { text: req.body.text, user: user.candidate._id },
+    { date: req.body.date, user: user.candidate._id },
     (err) => {
       if (err) console.error('Error: ', err);
     }
@@ -83,7 +83,7 @@ exports.removeTodo = async (req, res) => {
   }
   const user = await checkUserById(req.query.login);
   Todo.findOneAndDelete({
-    text: req.body.text,
+    date: req.body.date,
     user: user.candidate._id,
   })
     .then(res.json({ msg: 'Todo has been removed' }))
