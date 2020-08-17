@@ -16,7 +16,7 @@ export default function NavBar() {
   };
 
   return (
-    <ul>
+    <ul className='nav'>
       <li>
         <Link to='/' className='link'>
           Todo

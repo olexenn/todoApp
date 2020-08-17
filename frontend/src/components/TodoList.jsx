@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { List, ListSubheader, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { useApi } from '../hooks/apiHook';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTodos } from '../redux/actions/listActions';
@@ -41,20 +41,11 @@ function TodoList() {
 
       <AddTodo />
 
-      <List
-        subheader={
-          list.length > 0 ? (
-            <ListSubheader>Current Todos</ListSubheader>
-          ) : (
-            <ListSubheader>No Todos</ListSubheader>
-          )
-        }
-      >
+      <ul>
         {list.map((todo) => {
-          console.log(todo);
           return <TodoItem key={todo._id} todo={todo} />;
         })}
-      </List>
+      </ul>
     </React.Fragment>
   );
 }

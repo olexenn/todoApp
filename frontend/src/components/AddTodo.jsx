@@ -1,28 +1,11 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TextField, Paper, makeStyles } from '@material-ui/core';
 import { addTodo } from '../redux/actions/listActions';
 import { toggleAlert } from '../redux/actions/alertActions';
 import { useApi } from '../hooks/apiHook';
 
-const useStyles = makeStyles((theme) => ({
-  form: {
-    margin: theme.spacing(2, 0),
-    maxWidth: '100%',
-    alignItems: 'center',
-  },
-  input: {
-    marginRight: theme.spacing(1),
-  },
-  btn: {
-    marginLeft: theme.spacing(1),
-  },
-}));
-
 export default function AddTodo() {
   const API = 'http://localhost:3001/api/v1/?login=';
-
-  const classes = useStyles();
 
   const isAlert = useSelector((state) => state.alert);
 
@@ -55,34 +38,20 @@ export default function AddTodo() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={classes.form}>
-      <Paper elevation={3}>
-        {error ? (
-          <TextField
-            fullWidth
-            variant='outlined'
-            size='small'
-            error
-            helperText='Input field cannot be blank'
-            onChange={handleInput}
-            name='input'
-            value={input}
-            className={classes.input}
-            placeholder='Enter Your Todo Here'
-          />
-        ) : (
-          <TextField
-            fullWidth
-            variant='outlined'
-            size='small'
-            onChange={handleInput}
-            name='input'
-            value={input}
-            className={classes.input}
-            placeholder='Enter Your Todo Here'
-          />
-        )}
-      </Paper>
+    <form onSubmit={handleSubmit}>
+      {error ? (
+        <div className='group'>
+          <input onChange={handleInput} name='input' value={input} required />
+          <label>Enter Your Todo Here</label>
+          <span className='bar'></span>
+        </div>
+      ) : (
+        <div className='group'>
+          <input onChange={handleInput} name='input' value={input} required />
+          <label>Enter Your Todo Here</label>
+          <span className='bar'></span>
+        </div>
+      )}
     </form>
   );
 }
